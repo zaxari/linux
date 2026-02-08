@@ -750,6 +750,12 @@ static const struct nla_policy fl_policy[TCA_FLOWER_MAX + 1] = {
 							  TCA_FLOWER_KEY_ENC_FLAGS_POLICY_MASK),
 	[TCA_FLOWER_KEY_ENC_FLAGS_MASK]	= NLA_POLICY_MASK(NLA_BE32,
 							  TCA_FLOWER_KEY_ENC_FLAGS_POLICY_MASK),
+	[TCA_FLOWER_KEY_SKB_MARK]	= { .type = NLA_U32 },
+	[TCA_FLOWER_KEY_SKB_MARK_MASK]	= { .type = NLA_U32 },
+	[TCA_FLOWER_KEY_SKB_PRIORITY]	= { .type = NLA_U32 },
+	[TCA_FLOWER_KEY_SKB_PRIORITY_MASK] = { .type = NLA_U32 },
+	[TCA_FLOWER_KEY_SKB_TCINDEX]	= { .type = NLA_U16 },
+	[TCA_FLOWER_KEY_SKB_TCINDEX_MASK] = { .type = NLA_U16 },
 };
 
 static const struct nla_policy
@@ -1921,6 +1927,15 @@ static int fl_set_key(struct net *net, struct nlattr *tca_opts,
 	fl_set_key_val(tb, &key->meta.l2_miss, TCA_FLOWER_L2_MISS,
 		       &mask->meta.l2_miss, TCA_FLOWER_UNSPEC,
 		       sizeof(key->meta.l2_miss));
+	fl_set_key_val(tb, &key->meta.mark, TCA_FLOWER_KEY_SKB_MARK,
+		       &mask->meta.mark, TCA_FLOWER_KEY_SKB_MARK_MASK,
+		       sizeof(key->meta.mark));
+	fl_set_key_val(tb, &key->meta.priority, TCA_FLOWER_KEY_SKB_PRIORITY,
+		       &mask->meta.priority, TCA_FLOWER_KEY_SKB_PRIORITY_MASK,
+		       sizeof(key->meta.priority));
+	fl_set_key_val(tb, &key->meta.tc_index, TCA_FLOWER_KEY_SKB_TCINDEX,
+		       &mask->meta.tc_index, TCA_FLOWER_KEY_SKB_TCINDEX_MASK,
+		       sizeof(key->meta.tc_index));
 
 	fl_set_key_val(tb, key->eth.dst, TCA_FLOWER_KEY_ETH_DST,
 		       mask->eth.dst, TCA_FLOWER_KEY_ETH_DST_MASK,
@@ -3486,6 +3501,20 @@ static int fl_dump_key(struct sk_buff *skb, struct net *net,
 	if (fl_dump_key_val(skb, &key->meta.l2_miss,
 			    TCA_FLOWER_L2_MISS, &mask->meta.l2_miss,
 			    TCA_FLOWER_UNSPEC, sizeof(key->meta.l2_miss)))
+		goto nla_put_failure;
+	if (fl_dump_key_val(skb, &key->meta.mark, TCA_FLOWER_KEY_SKB_MARK,
+			    &mask->meta.mark, TCA_FLOWER_KEY_SKB_MARK_MASK,
+			    sizeof(key->meta.mark)))
+		goto nla_put_failure;
+	if (fl_dump_key_val(skb, &key->meta.priority,
+			    TCA_FLOWER_KEY_SKB_PRIORITY, &mask->meta.priority,
+			    TCA_FLOWER_KEY_SKB_PRIORITY_MASK,
+			    sizeof(key->meta.priority)))
+		goto nla_put_failure;
+	if (fl_dump_key_val(skb, &key->meta.tc_index,
+			    TCA_FLOWER_KEY_SKB_TCINDEX, &mask->meta.tc_index,
+			    TCA_FLOWER_KEY_SKB_TCINDEX_MASK,
+			    sizeof(key->meta.tc_index)))
 		goto nla_put_failure;
 
 	if (fl_dump_key_val(skb, key->eth.dst, TCA_FLOWER_KEY_ETH_DST,

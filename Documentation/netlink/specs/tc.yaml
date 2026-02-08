@@ -2908,6 +2908,24 @@ attribute-sets:
         byte-order: big-endian
         enum: flower-key-ctrl-flags
         enum-as-flags: true
+      -
+        name: key-skb-mark
+        type: u32
+      -
+        name: key-skb-mark-mask
+        type: u32
+      -
+        name: key-skb-priority
+        type: u32
+      -
+        name: key-skb-priority-mask
+        type: u32
+      -
+        name: key-skb-tcindex
+        type: u16
+      -
+        name: key-skb-tcindex-mask
+        type: u16
   -
     name: flower-key-enc-opts-attrs
     name-prefix: tca-flower-key-enc-opts-
