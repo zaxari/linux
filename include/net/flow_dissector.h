@@ -257,11 +257,17 @@ struct flow_dissector_key_ip {
  * @ingress_ifindex: ingress ifindex
  * @ingress_iftype: ingress interface type
  * @l2_miss: packet did not match an L2 entry during forwarding
+ * @mark: skb mark
+ * @priority: skb priority
+ * @tc_index: skb tc index
  */
 struct flow_dissector_key_meta {
 	int ingress_ifindex;
 	u16 ingress_iftype;
 	u8 l2_miss;
+	u32 mark;
+	u32 priority;
+	u16 tc_index;
 };
 
 /**

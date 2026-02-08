@@ -286,6 +286,13 @@ void skb_flow_dissect_meta(const struct sk_buff *skb,
 					 FLOW_DISSECTOR_KEY_META,
 					 target_container);
 	meta->ingress_ifindex = skb->skb_iif;
+	meta->mark = skb->mark;
+	meta->priority = skb->priority;
+#if defined(CONFIG_NET_SCHED) || defined(CONFIG_NET_XGRESS)
+	meta->tc_index = skb->tc_index;
+#else
+	meta->tc_index = 0;
+#endif
 #if IS_ENABLED(CONFIG_NET_TC_SKB_EXT)
 	if (tc_skb_ext_tc_enabled()) {
 		struct tc_skb_ext *ext;
