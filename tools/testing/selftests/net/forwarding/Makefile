@@ -95,6 +95,7 @@ TEST_PROGS := \
 	tc_flower_l2_miss.sh \
 	tc_flower_port_range.sh \
 	tc_flower_router.sh \
+	tc_flower_skb_meta.sh \
 	tc_mpls_l2vpn.sh \
 	tc_police.sh \
 	tc_shblocks.sh \
